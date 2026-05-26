@@ -1,0 +1,6 @@
+Para cada línea del archivo:
+    1. Si empieza por # → saltar
+    2. Si está vacía → saltar
+    3. Separar por el primer "=" → tienes KEY y VALUE
+    4. Limpiar espacios con .strip()
+    5. Guardar en un diccionario  
