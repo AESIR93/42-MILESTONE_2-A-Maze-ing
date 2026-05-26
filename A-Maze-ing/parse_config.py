@@ -1,4 +1,7 @@
+#!/usr/bin/env python3
+
 import sys
+
 
 def parse_config(filepath: str) -> dict:
     """Parse the maze configuration file.
@@ -18,7 +21,7 @@ def parse_config(filepath: str) -> dict:
         with open(filepath, "r") as f:
             for line in f:
                 try:
-                    if line.startswith("#") or line == "\n" :
+                    if line.startswith("#") or line == "\n":
                         continue
                     else:
                         if "=" not in line:
@@ -42,17 +45,32 @@ def dict_validation(config: dict[str, str]) -> dict:
 
     Args: 
         config: Already parsed dictionary.
-    
+
     Returns:
         A dictionary ready for the generator to use.
-    
+
     Raises:
         ValueError: If a required key is missing or has an invalid value.
     """
     if config is None:
         sys.exit(1)
+    required_keys = ["WIDTH", "HEIGHT", "ENTRY",
+                        "EXIT", "OUTPUT_FILE", "PERFECT"]
+    try:
+        for key in required_keys:
+            if key not in config:
+                raise ValueError("Required parameter missing")
+    except ValueError as e:
+        print(e)
+    final_dict = {}
+    try:
+        for key, value in config.items():
+            if key in ("WIDTH", "HEIGHT"):
+                value = int(value)
+                if value >= 0:
+                    final_dict[key] = value
 
 if __name__ == "__main__":
     configuration = print(parse_config(sys.argv[1]))
     if configuration is not None:
-        print(dict_validation(configuration))
+        dict_validation(configuration)
