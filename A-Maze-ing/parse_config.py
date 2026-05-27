@@ -61,7 +61,8 @@ def dict_validation(config: dict[str, str]) -> dict:
             if key not in config:
                 raise ValueError("Required parameter missing")
     except ValueError as e:
-        print(e)
+        print(f"Invalid value in config file: {e}")
+        sys.exit(1)
     final_dict = {}
     try:
         for key, value in config.items():
@@ -69,8 +70,41 @@ def dict_validation(config: dict[str, str]) -> dict:
                 value = int(value)
                 if value >= 0:
                     final_dict[key] = value
+                else:
+                    raise ValueError("Width and height can't be negative")
+            if key in ("ENTRY", "EXIT"):
+                x, y = value.split(",")
+                x, y = x.strip(), y.strip()
+                x, y = int(x), int(y)
+                if x >= 0 or y >= 0:
+                    final_dict[key] = (x, y)
+                else:
+                    raise ValueError("Coordinates can't be negative")
+            if key == "OUTPUT_FILE":
+                if value == "":
+                    raise ValueError("You need to specify a name for the output file!")
+                else:
+                    final_dict[key] = value
+            if key == "PERFECT":
+                if value not in ("True", "False"):
+                    raise ValueError("PERFECT parameter only accepts True or False")
+                else:
+                    final_dict[key] = value == "True"
+        if final_dict["ENTRY"] == final_dict["EXIT"]:
+            raise ValueError("ENTRY and EXIT can't be the same cell u genius")
+        if final_dict["ENTRY"][0] >= final_dict["WIDTH"] or final_dict["ENTRY"][1] >= final_dict["HEIGHT"]:
+            raise ValueError("ENTRY coordinates must be within maze limits u idiot")
+        if final_dict["EXIT"][0] >= final_dict["WIDTH"] or final_dict["EXIT"][1] >= final_dict["HEIGHT"]:
+            raise ValueError("EXIT coordinates must be within maze limits u dumbo")
+        return final_dict
+    except ValueError as e:
+        print(f"Invalid value in config file: {e}")
+        sys.exit(1)
+
 
 if __name__ == "__main__":
-    configuration = print(parse_config(sys.argv[1]))
+    configuration = parse_config(sys.argv[1])
+    dictionary = {}
     if configuration is not None:
-        dict_validation(configuration)
+        dictionary = dict_validation(configuration)
+    print(dictionary)
