@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 
 class Cell():
-    def __init__(self, north=True, south=True, west=True, east=True):
+    def __init__(self, north: bool = True, south: bool = True,
+                 west: bool = True, east: bool = True) -> None:
         self.north = north
         self.south = south
         self.west = west
         self.east = east
+
 
 def render(maze: list[list[Cell]]) -> None:
     for row in maze:
@@ -33,13 +35,15 @@ def render(maze: list[list[Cell]]) -> None:
     line_bot += "+"
     print(line_bot)
 
-def main():
+
+def main() -> None:
     maze = [[Cell() for _ in range(8)] for _ in range(4)]
     maze[1][1].north = False
     maze[2][4].west = False
     maze[0][3].north = False
     maze[1][6].west = False
     render(maze)
+
 
 if __name__ == "__main__":
     main()

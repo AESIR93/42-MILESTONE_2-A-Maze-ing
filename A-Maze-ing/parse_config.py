@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 
 import sys
+from typing import Any
 
 
-def parse_config(filepath: str) -> dict:
+def parse_config(filepath: str) -> dict[str, str]:
     """Parse the maze configuration file.
 
     Args:
@@ -33,17 +34,17 @@ def parse_config(filepath: str) -> dict:
                             config[key] = value
                 except SyntaxError as e:
                     print(e)
-                    return
+                    sys.exit(1)
     except FileNotFoundError as er:
         print(er)
-        return
+        sys.exit(1)
     return config
 
 
-def dict_validation(config: dict[str, str]) -> dict:
+def dict_validation(config: dict[str, str]) -> dict[str, Any]:
     """Validate the dictionary elements from parse_config.
 
-    Args: 
+    Args:
         config: Already parsed dictionary.
 
     Returns:
@@ -55,7 +56,7 @@ def dict_validation(config: dict[str, str]) -> dict:
     if config is None:
         sys.exit(1)
     required_keys = ["WIDTH", "HEIGHT", "ENTRY",
-                        "EXIT", "OUTPUT_FILE", "PERFECT"]
+                     "EXIT", "OUTPUT_FILE", "PERFECT"]
     try:
         for key in required_keys:
             if key not in config:
@@ -63,39 +64,45 @@ def dict_validation(config: dict[str, str]) -> dict:
     except ValueError as e:
         print(f"Invalid value in config file: {e}")
         sys.exit(1)
-    final_dict = {}
+    final_dict: dict[str, Any] = {}
     try:
         for key, value in config.items():
             if key in ("WIDTH", "HEIGHT"):
-                value = int(value)
-                if value >= 0:
-                    final_dict[key] = value
+                int_value = int(value)
+                if int_value >= 0:
+                    final_dict[key] = int_value
                 else:
                     raise ValueError("Width and height can't be negative")
             if key in ("ENTRY", "EXIT"):
                 x, y = value.split(",")
                 x, y = x.strip(), y.strip()
-                x, y = int(x), int(y)
-                if x >= 0 or y >= 0:
-                    final_dict[key] = (x, y)
+                int_x, int_y = int(x), int(y)
+                if int_x >= 0 and int_y >= 0:
+                    final_dict[key] = (int_x, int_y)
                 else:
                     raise ValueError("Coordinates can't be negative")
             if key == "OUTPUT_FILE":
                 if value == "":
-                    raise ValueError("You need to specify a name for the output file!")
+                    raise ValueError(
+                        "You need to specify a name for the output file!")
                 else:
                     final_dict[key] = value
             if key == "PERFECT":
                 if value not in ("True", "False"):
-                    raise ValueError("PERFECT parameter only accepts True or False")
+                    raise ValueError(
+                        "PERFECT parameter only accepts True or False")
                 else:
                     final_dict[key] = value == "True"
         if final_dict["ENTRY"] == final_dict["EXIT"]:
             raise ValueError("ENTRY and EXIT can't be the same cell u genius")
-        if final_dict["ENTRY"][0] >= final_dict["WIDTH"] or final_dict["ENTRY"][1] >= final_dict["HEIGHT"]:
-            raise ValueError("ENTRY coordinates must be within maze limits u idiot")
-        if final_dict["EXIT"][0] >= final_dict["WIDTH"] or final_dict["EXIT"][1] >= final_dict["HEIGHT"]:
-            raise ValueError("EXIT coordinates must be within maze limits u dumbo")
+        if (final_dict["ENTRY"][0] >= final_dict["WIDTH"]
+                or final_dict["ENTRY"][1] >= final_dict["HEIGHT"]):
+            raise ValueError(
+                "ENTRY coordinates must be within maze limits u idiot")
+        if (final_dict["EXIT"][0] >= final_dict["WIDTH"]
+                or final_dict["EXIT"][1] >= final_dict["HEIGHT"]):
+            raise ValueError(
+                "EXIT coordinates must be within maze limits u dumbo")
         return final_dict
     except ValueError as e:
         print(f"Invalid value in config file: {e}")
