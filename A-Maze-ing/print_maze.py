@@ -10,6 +10,11 @@ class Cell():
 
 
 def render(maze: list[list[Cell]]) -> None:
+    """Print the maze in the terminal.
+
+    Args:
+        maze: A list of list of Cell objects representing the maze.
+    """
     for row in maze:
         line_top = ""
         for cell in row:
