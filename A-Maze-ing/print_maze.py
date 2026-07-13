@@ -47,6 +47,7 @@ def main() -> None:
     maze[2][4].west = False
     maze[0][3].north = False
     maze[1][6].west = False
+    maze[3][4].west = False
     render(maze)
 
 
