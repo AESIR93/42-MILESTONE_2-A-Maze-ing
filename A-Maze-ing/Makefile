@@ -1,7 +1,7 @@
 install:
 	pip install -r requirements.txt
 run:
-	python3 a_maze_ing.py config.txt
+	python3 a_maze_ing.py config_text.txt
 debug:
 	python3 -m pdb a_maze_ing.py config.txt
 clean:

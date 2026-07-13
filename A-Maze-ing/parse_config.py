@@ -107,11 +107,3 @@ def dict_validation(config: dict[str, str]) -> dict[str, Any]:
     except ValueError as e:
         print(f"Invalid value in config file: {e}")
         sys.exit(1)
-
-
-if __name__ == "__main__":
-    configuration = parse_config(sys.argv[1])
-    dictionary = {}
-    if configuration is not None:
-        dictionary = dict_validation(configuration)
-    print(dictionary)

@@ -1,23 +1,35 @@
 #!/usr/bin/env python3
 
-class Cell():
-    def __init__(self, north: bool = True, south: bool = True,
-                 west: bool = True, east: bool = True) -> None:
-        self.north = north
-        self.south = south
-        self.west = west
-        self.east = east
+from maze_generator import Cell
+from typing import Optional
 
 
-def render(maze: list[list[Cell]]) -> None:
+def path_to_coords(path: list[str], entry: tuple[int, int]) -> list[tuple[int, int]]:
+    result = []
+    x, y = entry
+    result.append((x, y))
+    for coord in path:
+        if coord == 'N':
+            y -= 1
+        elif coord == 'S':
+            y += 1
+        elif coord == 'E':
+            x += 1
+        elif coord == 'W':
+            x -= 1
+        result.append((x, y))
+    return result
+
+
+def render(maze: list[list[Cell]], path_coords: Optional[list[tuple[int, int]]] = None) -> None:
     """Print the maze in the terminal.
 
     Args:
         maze: A list of list of Cell objects representing the maze.
     """
-    for row in maze:
+    for y, row in enumerate(maze):
         line_top = ""
-        for cell in row:
+        for x, cell in enumerate(row):
             line_top += "+"
             if cell.north:
                 line_top += "--"
@@ -26,11 +38,17 @@ def render(maze: list[list[Cell]]) -> None:
         line_top += "+"
         print(line_top)
         line_side = ""
-        for cell in row:
+        for x, cell in enumerate(row):
             if cell.west:
-                line_side += "|  "
+                if path_coords and (x, y) in path_coords:
+                    line_side += "|\033[33m+\033[0m "
+                else:
+                    line_side += "|  "
             else:
-                line_side += "   "
+                if path_coords and (x, y) in path_coords:
+                    line_side += " \033[33m+\033[0m "
+                else:
+                    line_side += "   "
         line_side += "|"
         print(line_side)
     last_row = maze[-1]
@@ -39,17 +57,3 @@ def render(maze: list[list[Cell]]) -> None:
         line_bot += "+--"
     line_bot += "+"
     print(line_bot)
-
-
-def main() -> None:
-    maze = [[Cell() for _ in range(8)] for _ in range(4)]
-    maze[1][1].north = False
-    maze[2][4].west = False
-    maze[0][3].north = False
-    maze[1][6].west = False
-    maze[3][4].west = False
-    render(maze)
-
-
-if __name__ == "__main__":
-    main()

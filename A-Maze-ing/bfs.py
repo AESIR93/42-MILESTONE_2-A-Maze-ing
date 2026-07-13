@@ -1,4 +1,4 @@
-from print_maze import Cell
+from maze_generator import Cell
 from collections import deque
 
 
@@ -57,24 +57,3 @@ def solve(maze: list[list[Cell]], entry: tuple[int, int],
         current = parent
     path.reverse()
     return path
-
-
-if __name__ == "__main__":
-    maze = [[Cell() for _ in range(4)] for _ in range(4)]
-
-# abrir camino hacia el este en la fila 0
-maze[0][0].east = False
-maze[0][1].west = False
-maze[0][1].east = False
-maze[0][2].west = False
-maze[0][2].east = False
-maze[0][3].west = False
-
-# abrir camino hacia el sur en la columna 3
-maze[0][3].south = False
-maze[1][3].north = False
-maze[1][3].south = False
-maze[2][3].north = False
-maze[2][3].south = False
-maze[3][3].north = False
-print(f"{solve(maze, (0,0), (3,3))}")
