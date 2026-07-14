@@ -36,7 +36,7 @@ def main() -> None:
     render(cells, coords)
     print_menu()
     show_path = True
-    colors = ["\033[37m", "\033[31m", "\033[32m", "\033[34m"]
+    colors = ["\033[97m", "\033[91m", "\033[95m", "\033[94m"]
     color_idx = 0
     while True:
         key = readchar.readkey()
