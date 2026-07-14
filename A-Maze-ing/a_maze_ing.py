@@ -7,6 +7,7 @@ from maze_generator import MazeGenerator
 import sys
 import os
 
+
 def print_menu() -> None:
     print("\nChoose an option to interact with your maze!")
     print("Options:")
@@ -16,6 +17,7 @@ def print_menu() -> None:
     print("     q: quit")
     print("Choose now: ", end="")
     sys.stdout.flush()
+
 
 def main() -> None:
     config = parse_config(sys.argv[1])
@@ -34,6 +36,8 @@ def main() -> None:
     render(cells, coords)
     print_menu()
     show_path = True
+    colors = ["\033[37m", "\033[31m", "\033[32m", "\033[34m"]
+    color_idx = 0
     while True:
         key = readchar.readkey()
         if key == 'r':
@@ -45,9 +49,24 @@ def main() -> None:
             render(cells, coords)
             print_menu()
         elif key == 'p':
-            pass
+            os.system("clear")
+            if show_path is True:
+                show_path = False
+                render(cells)
+                print_menu()
+            elif show_path is False:
+                show_path = True
+                render(cells, coords)
+                print_menu()
         elif key == 'c':
-            pass
+            os.system("clear")
+            color_idx = (color_idx + 1) % len(colors)
+            if show_path is True:
+                render(cells, coords, colors[color_idx])
+                print_menu()
+            elif show_path is False:
+                render(cells, None, colors[color_idx])
+                print_menu()
         elif key == 'q':
             sys.exit()
 

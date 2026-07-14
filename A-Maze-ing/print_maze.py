@@ -4,7 +4,8 @@ from maze_generator import Cell
 from typing import Optional
 
 
-def path_to_coords(path: list[str], entry: tuple[int, int]) -> list[tuple[int, int]]:
+def path_to_coords(path: list[str],
+                   entry: tuple[int, int]) -> list[tuple[int, int]]:
     result = []
     x, y = entry
     result.append((x, y))
@@ -21,7 +22,9 @@ def path_to_coords(path: list[str], entry: tuple[int, int]) -> list[tuple[int, i
     return result
 
 
-def render(maze: list[list[Cell]], path_coords: Optional[list[tuple[int, int]]] = None) -> None:
+def render(maze: list[list[Cell]],
+           path_coords: Optional[list[tuple[int, int]]] = None,
+           wall_color: str = "\033[36m") -> None:
     """Print the maze in the terminal.
 
     Args:
@@ -30,30 +33,34 @@ def render(maze: list[list[Cell]], path_coords: Optional[list[tuple[int, int]]] 
     for y, row in enumerate(maze):
         line_top = ""
         for x, cell in enumerate(row):
-            line_top += "+"
-            if cell.north:
-                line_top += "--"
+            line_top += f"{wall_color}+\033[0m"
+            if cell.north and cell.south and cell.east and cell.west:
+                line_top += "\033[32m##\033[0m"
+            elif cell.north:
+                line_top += f"{wall_color}--\033[0m"
             else:
                 line_top += "  "
-        line_top += "+"
+        line_top += f"{wall_color}+\033[0m"
         print(line_top)
         line_side = ""
         for x, cell in enumerate(row):
-            if cell.west:
+            if cell.north and cell.south and cell.east and cell.west:
+                line_side += "\033[32m|##\033[0m"
+            elif cell.west:
                 if path_coords and (x, y) in path_coords:
-                    line_side += "|\033[33m+\033[0m "
+                    line_side += f"{wall_color}|\033[33m+\033[0m "
                 else:
-                    line_side += "|  "
+                    line_side += f"{wall_color}|  \033[0m"
             else:
                 if path_coords and (x, y) in path_coords:
                     line_side += " \033[33m+\033[0m "
                 else:
                     line_side += "   "
-        line_side += "|"
+        line_side += f"{wall_color}|\033[0m"
         print(line_side)
     last_row = maze[-1]
     line_bot = ""
     for cell in last_row:
-        line_bot += "+--"
-    line_bot += "+"
+        line_bot += f"{wall_color}+--\033[0m"
+    line_bot += f"{wall_color}+\033[0m"
     print(line_bot)
