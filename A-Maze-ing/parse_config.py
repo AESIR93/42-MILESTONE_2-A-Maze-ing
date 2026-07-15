@@ -93,6 +93,8 @@ def dict_validation(config: dict[str, str]) -> dict[str, Any]:
                         "PERFECT parameter only accepts True or False")
                 else:
                     final_dict[key] = value == "True"
+            if key == "SEED":
+                final_dict[key] = int(value)
         if final_dict["ENTRY"] == final_dict["EXIT"]:
             raise ValueError("ENTRY and EXIT can't be the same cell u genius")
         if (final_dict["ENTRY"][0] >= final_dict["WIDTH"]

@@ -8,6 +8,15 @@ import sys
 import os
 
 
+def write_output(generator: MazeGenerator, output_file: str) -> None:
+    with open(output_file, "w") as f:
+        f.write(generator.get_hex_string())
+        f.write("\n")
+        f.write(f"{generator.entry[0]},{generator.entry[1]}\n")
+        f.write(f"{generator.exit[0]},{generator.exit[1]}\n")
+        f.write(f'{"".join(generator.solve())}\n')
+
+
 def print_menu() -> None:
     print("\nChoose an option to interact with your maze!")
     print("Options:")
@@ -27,7 +36,8 @@ def main() -> None:
         height=validated_dict["HEIGHT"],
         entry=validated_dict["ENTRY"],
         exit=validated_dict["EXIT"],
-        perfect=validated_dict["PERFECT"]
+        perfect=validated_dict["PERFECT"],
+        seed=validated_dict.get("SEED", None)
     )
     generator.generate()
     cells = generator.to_cells()
@@ -46,8 +56,12 @@ def main() -> None:
             cells = generator.to_cells()
             path = generator.solve()
             coords = path_to_coords(path, generator.entry)
-            render(cells, coords)
-            print_menu()
+            if show_path is True:
+                render(cells, coords)
+                print_menu()
+            else:
+                render(cells)
+                print_menu()
         elif key == 'p':
             os.system("clear")
             if show_path is True:
@@ -68,6 +82,7 @@ def main() -> None:
                 render(cells, None, colors[color_idx])
                 print_menu()
         elif key == 'q':
+            write_output(generator, validated_dict["OUTPUT_FILE"])
             sys.exit()
 
 
