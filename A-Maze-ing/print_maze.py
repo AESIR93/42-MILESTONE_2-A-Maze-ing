@@ -33,35 +33,35 @@ def render(maze: list[list[Cell]],
     for y, row in enumerate(maze):
         line_top = ""
         for x, cell in enumerate(row):
-            line_top += f"{wall_color}+\033[0m"
+            line_top += f"{wall_color}¤\033[0m"
             if cell.north and cell.south and cell.east and cell.west:
                 line_top += "\033[1;92m##\033[0m"
             elif cell.north:
-                line_top += f"{wall_color}--\033[0m"
+                line_top += f"{wall_color}══\033[0m"
             else:
                 line_top += "  "
-        line_top += f"{wall_color}+\033[0m"
+        line_top += f"{wall_color}¤\033[0m"
         print(line_top)
         line_side = ""
         for x, cell in enumerate(row):
             if cell.north and cell.south and cell.east and cell.west:
-                line_side += "\033[1;92m║##\033[0m"
+                line_side += "\033[1;92m║██\033[0m"
             elif cell.west:
                 if (path_coords and (x, y) == path_coords[0]
                     or path_coords
                         and (x, y) == path_coords[len(path_coords) - 1]):
-                    line_side += f"{wall_color}║\033[1;91m*\033[0m "
+                    line_side += f"{wall_color}║\033[1;91m×\033[0m "
                 elif path_coords and (x, y) in path_coords:
-                    line_side += f"{wall_color}║\033[1;93m+\033[0m "
+                    line_side += f"{wall_color}║\033[1;93m*\033[0m "
                 else:
                     line_side += f"{wall_color}║  \033[0m"
             else:
                 if (path_coords and (x, y) == path_coords[0]
                         or path_coords
                         and (x, y) == path_coords[len(path_coords) - 1]):
-                    line_side += f"{wall_color} \033[1;91m*\033[0m "
+                    line_side += f"{wall_color} \033[1;91m×\033[0m "
                 elif path_coords and (x, y) in path_coords:
-                    line_side += " \033[1;93m+\033[0m "
+                    line_side += " \033[1;93m*\033[0m "
                 else:
                     line_side += "   "
         line_side += f"{wall_color}║\033[0m"
@@ -69,6 +69,6 @@ def render(maze: list[list[Cell]],
     last_row = maze[-1]
     line_bot = ""
     for cell in last_row:
-        line_bot += f"{wall_color}+--\033[0m"
-    line_bot += f"{wall_color}+\033[0m"
+        line_bot += f"{wall_color}¤══\033[0m"
+    line_bot += f"{wall_color}¤\033[0m"
     print(line_bot)

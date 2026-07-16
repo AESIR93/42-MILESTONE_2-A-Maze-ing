@@ -2,6 +2,7 @@
 
 import sys
 from typing import Any
+import os
 
 
 def parse_config(filepath: str) -> dict[str, str]:
@@ -57,26 +58,39 @@ def dict_validation(config: dict[str, str]) -> dict[str, Any]:
         sys.exit(1)
     required_keys = ["WIDTH", "HEIGHT", "ENTRY",
                      "EXIT", "OUTPUT_FILE", "PERFECT"]
+    valid_keys = ["WIDTH", "HEIGHT", "ENTRY",
+                  "EXIT", "OUTPUT_FILE", "PERFECT", "SEED"]
     try:
         for key in required_keys:
             if key not in config:
-                raise ValueError("Required parameter missing")
+                raise ValueError(f"Required parameter missing: {key}")
+        for valid in config.keys():
+            if valid not in valid_keys:
+                raise ValueError(f"Key not valid: {valid}")
     except ValueError as e:
-        print(f"Invalid value in config file: {e}")
+        print(e)
         sys.exit(1)
     final_dict: dict[str, Any] = {}
     try:
         for key, value in config.items():
             if key in ("WIDTH", "HEIGHT"):
-                int_value = int(value)
+                try:
+                    int_value = int(value)
+                except ValueError:
+                    print("WIDTH and HEIGHT must be integers")
+                    sys.exit(1)
                 if int_value >= 0:
                     final_dict[key] = int_value
                 else:
-                    raise ValueError("Width and height can't be negative")
+                    raise ValueError("WIDTH and HEIGHT can't be negative")
             if key in ("ENTRY", "EXIT"):
-                x, y = value.split(",")
-                x, y = x.strip(), y.strip()
-                int_x, int_y = int(x), int(y)
+                try:
+                    x, y = value.split(",")
+                    x, y = x.strip(), y.strip()
+                    int_x, int_y = int(x), int(y)
+                except ValueError:
+                    print("For ENTRY and EXIT you must enter 2 int values")
+                    sys.exit(1)
                 if int_x >= 0 and int_y >= 0:
                     final_dict[key] = (int_x, int_y)
                 else:
@@ -85,6 +99,9 @@ def dict_validation(config: dict[str, str]) -> dict[str, Any]:
                 if value == "":
                     raise ValueError(
                         "You need to specify a name for the output file!")
+                elif not value.endswith(".txt") or value == "requirements.txt" or value == "config.txt":
+                    raise ValueError(
+                        "OUTPUT_FILE must end in .txt, and can`t override requirements or config itself")
                 else:
                     final_dict[key] = value
             if key == "PERFECT":
@@ -94,7 +111,11 @@ def dict_validation(config: dict[str, str]) -> dict[str, Any]:
                 else:
                     final_dict[key] = value == "True"
             if key == "SEED":
-                final_dict[key] = int(value)
+                try:
+                    final_dict[key] = int(value)
+                except ValueError:
+                    print("SEED parameter only accepts integers")
+                    sys.exit(1)
         if final_dict["ENTRY"] == final_dict["EXIT"]:
             raise ValueError("ENTRY and EXIT can't be the same cell u genius")
         if (final_dict["ENTRY"][0] >= final_dict["WIDTH"]
@@ -107,5 +128,5 @@ def dict_validation(config: dict[str, str]) -> dict[str, Any]:
                 "EXIT coordinates must be within maze limits u dumbo")
         return final_dict
     except ValueError as e:
-        print(f"Invalid value in config file: {e}")
+        print(e)
         sys.exit(1)
