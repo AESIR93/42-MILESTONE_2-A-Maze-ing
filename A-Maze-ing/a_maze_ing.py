@@ -6,7 +6,7 @@ from parse_config import parse_config, dict_validation
 from maze_generator import MazeGenerator
 import sys
 import os
-from random import Random
+from random import Random, randint
 
 
 def write_output(generator: MazeGenerator, output_file: str) -> None:
@@ -40,7 +40,7 @@ def main() -> None:
         exit=validated_dict["EXIT"],
         perfect=validated_dict["PERFECT"],
     )
-    seed = validated_dict.get("SEED", 1)
+    seed = validated_dict.get("SEED", randint(1,1000))
     rng = Random(seed)
     generator.generate(rng)
     cells = generator.to_cells()
