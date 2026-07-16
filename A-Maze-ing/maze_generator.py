@@ -1,6 +1,6 @@
 from typing import Optional
 from collections import deque
-import random
+from random import Random
 import sys
 
 
@@ -188,7 +188,7 @@ class MazeGenerator:
 
         return pattern
 
-    def generate(self) -> list[list[int]]:
+    def generate(self, rng: Random) -> list[list[int]]:
         """Generate the maze using recursive backtracking.
 
         If the '42' pattern cannot be placed for this maze's size
@@ -207,8 +207,6 @@ class MazeGenerator:
             [False for _ in range(self.width)]
             for _ in range(self.height)
         ]
-
-        rng = random.Random(self.seed)
 
         self._pattern_cells = self._resolve_pattern_cells()
 
@@ -252,7 +250,7 @@ class MazeGenerator:
 
         return self.grid
 
-    def _add_loops(self, rng: random.Random) -> None:
+    def _add_loops(self, rng: Random) -> None:
         """Remove walls to introduce loops (imperfect maze).
 
         Targets ~10% of removable internal walls while respecting
