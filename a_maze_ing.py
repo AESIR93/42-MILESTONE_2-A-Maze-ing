@@ -40,7 +40,7 @@ def main() -> None:
         exit=validated_dict["EXIT"],
         perfect=validated_dict["PERFECT"],
     )
-    seed = validated_dict.get("SEED", randint(1,1000))
+    seed = validated_dict.get("SEED", randint(1, 1000))
     rng = Random(seed)
     generator.generate(rng)
     cells = generator.to_cells()
@@ -49,7 +49,9 @@ def main() -> None:
     render(cells, coords)
     print_menu()
     show_path = True
-    colors = ["\033[1;96m", "\033[1;90m", "\033[1;91m", "\033[1;95m", "\033[1;94m"]
+    colors = ["\033[1;96m", "\033[1;90m",
+              "\033[1;91m", "\033[1;95m",
+              "\033[1;94m"]
     color_idx = 0
     while True:
         key = readchar.readkey()

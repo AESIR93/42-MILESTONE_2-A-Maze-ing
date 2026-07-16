@@ -2,7 +2,6 @@
 
 import sys
 from typing import Any
-import os
 
 
 def parse_config(filepath: str) -> dict[str, str]:
@@ -99,9 +98,12 @@ def dict_validation(config: dict[str, str]) -> dict[str, Any]:
                 if value == "":
                     raise ValueError(
                         "You need to specify a name for the output file!")
-                elif not value.endswith(".txt") or value == "requirements.txt" or value == "config.txt":
+                elif (not value.endswith(".txt") or value == "requirements.txt"
+                      or value == "config.txt"):
                     raise ValueError(
-                        "OUTPUT_FILE must end in .txt, and can`t override requirements or config itself")
+                        "OUTPUT_FILE must end in .txt, and can`t override"
+                        " requirements or config itself"
+                    )
                 else:
                     final_dict[key] = value
             if key == "PERFECT":
