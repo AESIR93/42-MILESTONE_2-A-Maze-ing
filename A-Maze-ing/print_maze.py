@@ -24,7 +24,7 @@ def path_to_coords(path: list[str],
 
 def render(maze: list[list[Cell]],
            path_coords: Optional[list[tuple[int, int]]] = None,
-           wall_color: str = "\033[96m") -> None:
+           wall_color: str = "\033[1;96m") -> None:
     """Print the maze in the terminal.
 
     Args:
@@ -35,7 +35,7 @@ def render(maze: list[list[Cell]],
         for x, cell in enumerate(row):
             line_top += f"{wall_color}+\033[0m"
             if cell.north and cell.south and cell.east and cell.west:
-                line_top += "\033[92m##\033[0m"
+                line_top += "\033[1;92m##\033[0m"
             elif cell.north:
                 line_top += f"{wall_color}--\033[0m"
             else:
@@ -45,18 +45,26 @@ def render(maze: list[list[Cell]],
         line_side = ""
         for x, cell in enumerate(row):
             if cell.north and cell.south and cell.east and cell.west:
-                line_side += "\033[92m|##\033[0m"
+                line_side += "\033[1;92m║##\033[0m"
             elif cell.west:
-                if path_coords and (x, y) in path_coords:
-                    line_side += f"{wall_color}|\033[93m+\033[0m "
+                if (path_coords and (x, y) == path_coords[0]
+                    or path_coords
+                        and (x, y) == path_coords[len(path_coords) - 1]):
+                    line_side += f"{wall_color}║\033[1;91m*\033[0m "
+                elif path_coords and (x, y) in path_coords:
+                    line_side += f"{wall_color}║\033[1;93m+\033[0m "
                 else:
-                    line_side += f"{wall_color}|  \033[0m"
+                    line_side += f"{wall_color}║  \033[0m"
             else:
-                if path_coords and (x, y) in path_coords:
-                    line_side += " \033[93m+\033[0m "
+                if (path_coords and (x, y) == path_coords[0]
+                        or path_coords
+                        and (x, y) == path_coords[len(path_coords) - 1]):
+                    line_side += f"{wall_color} \033[1;91m*\033[0m "
+                elif path_coords and (x, y) in path_coords:
+                    line_side += " \033[1;93m+\033[0m "
                 else:
                     line_side += "   "
-        line_side += f"{wall_color}|\033[0m"
+        line_side += f"{wall_color}║\033[0m"
         print(line_side)
     last_row = maze[-1]
     line_bot = ""

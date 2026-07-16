@@ -18,6 +18,7 @@ def write_output(generator: MazeGenerator, output_file: str) -> None:
 
 
 def print_menu() -> None:
+    print("\n\033[1;36m==== A-Maze-Ing ====\033[0m")
     print("\nChoose an option to interact with your maze!")
     print("Options:")
     print("     r: Regenerate maze")
@@ -46,7 +47,7 @@ def main() -> None:
     render(cells, coords)
     print_menu()
     show_path = True
-    colors = ["\033[97m", "\033[91m", "\033[95m", "\033[94m"]
+    colors = ["\033[1;96m", "\033[1;90m", "\033[1;91m", "\033[1;95m", "\033[1;94m"]
     color_idx = 0
     while True:
         key = readchar.readkey()
@@ -83,6 +84,7 @@ def main() -> None:
                 print_menu()
         elif key == 'q':
             write_output(generator, validated_dict["OUTPUT_FILE"])
+            print()
             sys.exit()
 
 
