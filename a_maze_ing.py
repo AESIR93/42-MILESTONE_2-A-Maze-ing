@@ -3,7 +3,7 @@
 import readchar
 from Amazeing.print_maze import render, path_to_coords
 from Amazeing.parse_config import parse_config, dict_validation
-from maze_generator import MazeGenerator
+from mazegen.maze_generator import MazeGenerator
 import sys
 import os
 from random import Random, randint
