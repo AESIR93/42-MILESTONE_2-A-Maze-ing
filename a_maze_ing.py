@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 import readchar
-from print_maze import render, path_to_coords
-from parse_config import parse_config, dict_validation
+from Amazeing.print_maze import render, path_to_coords
+from Amazeing.parse_config import parse_config, dict_validation
 from maze_generator import MazeGenerator
 import sys
 import os
