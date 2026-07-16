@@ -6,6 +6,7 @@ from parse_config import parse_config, dict_validation
 from maze_generator import MazeGenerator
 import sys
 import os
+from random import Random
 
 
 def write_output(generator: MazeGenerator, output_file: str) -> None:
@@ -38,9 +39,10 @@ def main() -> None:
         entry=validated_dict["ENTRY"],
         exit=validated_dict["EXIT"],
         perfect=validated_dict["PERFECT"],
-        seed=validated_dict.get("SEED", None)
     )
-    generator.generate()
+    seed = validated_dict.get("SEED", 1)
+    rng = Random(seed)
+    generator.generate(rng)
     cells = generator.to_cells()
     path = generator.solve()
     coords = path_to_coords(path, generator.entry)
@@ -53,7 +55,9 @@ def main() -> None:
         key = readchar.readkey()
         if key == 'r':
             os.system("clear")
-            generator.generate()
+            seed += 1
+            rng = Random(seed)
+            generator.generate(rng)
             cells = generator.to_cells()
             path = generator.solve()
             coords = path_to_coords(path, generator.entry)
