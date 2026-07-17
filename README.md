@@ -1,8 +1,8 @@
+
+
+*This project has been created as part of the 42 curriculum by dhontani, edsole-a.*
 # A-Maze-ing
 
-*This project has been created as part of the 42 curriculum by edsole-a, dhontani.*
-
----
 
 ## Description
 
