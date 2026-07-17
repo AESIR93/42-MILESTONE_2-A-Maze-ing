@@ -21,15 +21,15 @@ def write_output(generator: MazeGenerator, output_file: str) -> None:
 
 
 def print_menu(warning: Optional[str]) -> None:
-    print("\n\033[1;92m==== A-Maze-Ing ====\033[0m")
+    print("\n\033[4;1;92m==== A-Maze-Ing ====\033[0m")
     if warning:
-        print(f"\n~ {warning} ~")
-    print("\nChoose an option to interact with your maze!")
-    print("Options:")
+        print(f"\n\033[1;2;3;93m~ {warning} ~\033[0m")
+    print("\n\033[97mChoose an option to interact with your maze!")
+    print("\nOptions:")
     print("     r: Regenerate maze")
     print("     p: Show/hide path")
     print("     c: Change color")
-    print("     q: quit")
+    print("     q: quit\n")
     print("Choose now: ", end="")
     sys.stdout.flush()
 
@@ -60,8 +60,8 @@ def main() -> None:
     else:
         print_menu(None)
     show_path = False
-    colors = ["\033[1;96m", "\033[1;90m",
-              "\033[1;91m", "\033[1;95m",
+    colors = ["\033[1;95m", "\033[1;90m",
+              "\033[1;91m", "\033[1;96m",
               "\033[1;94m"]
     color_idx = 0
     while True:
@@ -79,7 +79,7 @@ def main() -> None:
             path = generator.solve()
             coords = path_to_coords(path, generator.entry)
             if show_path is True:
-                render(cells, coords)
+                render(cells, coords, colors[color_idx])
                 render_path(coords)
                 maze_final = len(cells) * 2 + 1
                 print(f"\033[{maze_final + 1};1H", end="")
@@ -88,7 +88,7 @@ def main() -> None:
                 else:
                     print_menu(None)
             else:
-                render(cells, coords)
+                render(cells, coords, colors[color_idx])
                 if warning:
                     print_menu(warning)
                 else:
@@ -97,14 +97,14 @@ def main() -> None:
             os.system("clear")
             if show_path is True:
                 show_path = False
-                render(cells, coords)
+                render(cells, coords, colors[color_idx])
                 if warning:
                     print_menu(warning)
                 else:
                     print_menu(None)
             elif show_path is False:
                 show_path = True
-                render(cells, coords)
+                render(cells, coords, colors[color_idx])
                 render_path(coords)
                 maze_final = len(cells) * 2 + 1
                 print(f"\033[{maze_final + 1};1H", end="")

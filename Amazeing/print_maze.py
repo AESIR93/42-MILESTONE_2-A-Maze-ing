@@ -37,7 +37,7 @@ def path_to_coords(path: list[str],
 
 def render(maze: list[list[Cell]],
            path_coords: list[tuple[int, int]] = None,
-           wall_color: str = "\033[1;96m") -> None:
+           wall_color: str = "\033[1;95m") -> None:
     """Print the maze in the terminal.
 
     Args:
@@ -60,15 +60,17 @@ def render(maze: list[list[Cell]],
             if cell.north and cell.south and cell.east and cell.west:
                 line_side += "\033[1;92m║██\033[0m"
             elif cell.west:
-                if ((x, y) == path_coords[0]
-                        or (x, y) == path_coords[len(path_coords) - 1]):
-                    line_side += f"{wall_color}║\033[1;91m×\033[0m "
+                if ((x, y) == path_coords[0]):
+                    line_side += f"{wall_color}║\033[1;92m▓\033[0m\033[1;38;5;22m»\033[0m"
+                elif (x, y) == path_coords[len(path_coords) - 1]:
+                    line_side += f"{wall_color}║\033[1;91m»\033[0m\033[1;38;5;202m▓\033[0m"
                 else:
                     line_side += f"{wall_color}║  \033[0m"
             else:
-                if ((x, y) == path_coords[0]
-                        or (x, y) == path_coords[len(path_coords) - 1]):
-                    line_side += f"{wall_color} \033[1;91m×\033[0m "
+                if ((x, y) == path_coords[0]):
+                    line_side += f"{wall_color}\033[1;92m▓\033[0m\033[1;38;5;22m»\033[0m "
+                elif (x, y) == path_coords[len(path_coords) - 1]:
+                    line_side += f"{wall_color}\033[1;91m»\033[0m\033[1;38;5;202m▓\033[0m "
                 else:
                     line_side += "   "
         line_side += f"{wall_color}║\033[0m"
