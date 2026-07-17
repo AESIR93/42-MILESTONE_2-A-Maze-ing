@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 
 import readchar
-from Amazeing.print_maze import render, path_to_coords
+from Amazeing.print_maze import render, path_to_coords, render_path
 from Amazeing.parse_config import parse_config, dict_validation
 from mazegen.maze_generator import MazeGenerator
 import sys
+from typing import Optional
 import os
+import io
 from random import Random, randint
 
 
@@ -18,8 +20,10 @@ def write_output(generator: MazeGenerator, output_file: str) -> None:
         f.write(f'{"".join(generator.solve())}\n')
 
 
-def print_menu() -> None:
-    print("\n\033[1;36m==== A-Maze-Ing ====\033[0m")
+def print_menu(warning: Optional[str]) -> None:
+    print("\n\033[1;92m==== A-Maze-Ing ====\033[0m")
+    if warning:
+        print(f"\n~ {warning} ~")
     print("\nChoose an option to interact with your maze!")
     print("Options:")
     print("     r: Regenerate maze")
@@ -42,13 +46,20 @@ def main() -> None:
     )
     seed = validated_dict.get("SEED", randint(1, 1000))
     rng = Random(seed)
+    stderr_backup = sys.stderr
+    sys.stderr = io.StringIO()
     generator.generate(rng)
+    warning = sys.stderr.getvalue().strip()
+    sys.stderr = stderr_backup
     cells = generator.to_cells()
     path = generator.solve()
     coords = path_to_coords(path, generator.entry)
     render(cells, coords)
-    print_menu()
-    show_path = True
+    if warning:
+        print_menu(warning)
+    else:
+        print_menu(None)
+    show_path = False
     colors = ["\033[1;96m", "\033[1;90m",
               "\033[1;91m", "\033[1;95m",
               "\033[1;94m"]
@@ -59,35 +70,66 @@ def main() -> None:
             os.system("clear")
             seed += 1
             rng = Random(seed)
+            stderr_backup = sys.stderr
+            sys.stderr = io.StringIO()
             generator.generate(rng)
+            warning = sys.stderr.getvalue().strip()
+            sys.stderr = stderr_backup
             cells = generator.to_cells()
             path = generator.solve()
             coords = path_to_coords(path, generator.entry)
             if show_path is True:
                 render(cells, coords)
-                print_menu()
+                render_path(coords)
+                maze_final = len(cells) * 2 + 1
+                print(f"\033[{maze_final + 1};1H", end="")
+                if warning:
+                    print_menu(warning)
+                else:
+                    print_menu(None)
             else:
-                render(cells)
-                print_menu()
+                render(cells, coords)
+                if warning:
+                    print_menu(warning)
+                else:
+                    print_menu(None)
         elif key == 'p':
             os.system("clear")
             if show_path is True:
                 show_path = False
-                render(cells)
-                print_menu()
+                render(cells, coords)
+                if warning:
+                    print_menu(warning)
+                else:
+                    print_menu(None)
             elif show_path is False:
                 show_path = True
                 render(cells, coords)
-                print_menu()
+                render_path(coords)
+                maze_final = len(cells) * 2 + 1
+                print(f"\033[{maze_final + 1};1H", end="")
+                if warning:
+                    print_menu(warning)
+                else:
+                    print_menu(None)
         elif key == 'c':
             os.system("clear")
             color_idx = (color_idx + 1) % len(colors)
             if show_path is True:
                 render(cells, coords, colors[color_idx])
-                print_menu()
+                render_path(coords, False)
+                maze_final = len(cells) * 2 + 1
+                print(f"\033[{maze_final + 1};1H", end="")
+                if warning:
+                    print_menu(warning)
+                else:
+                    print_menu(None)
             elif show_path is False:
-                render(cells, None, colors[color_idx])
-                print_menu()
+                render(cells, coords, colors[color_idx])
+                if warning:
+                    print_menu(warning)
+                else:
+                    print_menu(None)
         elif key == 'q':
             write_output(generator, validated_dict["OUTPUT_FILE"])
             print()

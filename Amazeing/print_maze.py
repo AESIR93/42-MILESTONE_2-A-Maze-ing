@@ -1,7 +1,20 @@
 #!/usr/bin/env python3
 
 from maze_generator import Cell
-from typing import Optional
+import time
+
+def render_path(coords: list[tuple[int, int]], animate: bool = True) -> None:
+    if animate is True:
+        for x, y in coords[1:-1]:
+            fila = y * 2 + 2
+            columna = x * 3 + 2
+            print(f"\033[{fila};{columna}H\033[1;93m*\033[0m", end="", flush=True)
+            time.sleep(0.02)
+    else:
+        for x, y in coords[1:-1]:
+            fila = y * 2 + 2
+            columna = x * 3 + 2
+            print(f"\033[{fila};{columna}H\033[1;93m*\033[0m", end="", flush=True)
 
 
 def path_to_coords(path: list[str],
@@ -23,7 +36,7 @@ def path_to_coords(path: list[str],
 
 
 def render(maze: list[list[Cell]],
-           path_coords: Optional[list[tuple[int, int]]] = None,
+           path_coords: list[tuple[int, int]] = None,
            wall_color: str = "\033[1;96m") -> None:
     """Print the maze in the terminal.
 
@@ -47,21 +60,15 @@ def render(maze: list[list[Cell]],
             if cell.north and cell.south and cell.east and cell.west:
                 line_side += "\033[1;92m║██\033[0m"
             elif cell.west:
-                if (path_coords and (x, y) == path_coords[0]
-                    or path_coords
-                        and (x, y) == path_coords[len(path_coords) - 1]):
+                if ((x, y) == path_coords[0]
+                        or (x, y) == path_coords[len(path_coords) - 1]):
                     line_side += f"{wall_color}║\033[1;91m×\033[0m "
-                elif path_coords and (x, y) in path_coords:
-                    line_side += f"{wall_color}║\033[1;93m*\033[0m "
                 else:
                     line_side += f"{wall_color}║  \033[0m"
             else:
-                if (path_coords and (x, y) == path_coords[0]
-                        or path_coords
-                        and (x, y) == path_coords[len(path_coords) - 1]):
+                if ((x, y) == path_coords[0]
+                        or (x, y) == path_coords[len(path_coords) - 1]):
                     line_side += f"{wall_color} \033[1;91m×\033[0m "
-                elif path_coords and (x, y) in path_coords:
-                    line_side += " \033[1;93m*\033[0m "
                 else:
                     line_side += "   "
         line_side += f"{wall_color}║\033[0m"
