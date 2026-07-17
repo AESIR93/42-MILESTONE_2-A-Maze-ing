@@ -37,13 +37,13 @@ python -m build
 ### Running the program
 
 ```bash
-python3 a_maze_ing.py config.txt
+make run 
 ```
 
-Or via the Makefile:
+Or via:
 
 ```bash
-make run
+python3 a_maze_ing.py config.txt
 ```
 
 ### Other Makefile targets
@@ -199,8 +199,9 @@ python -m build
 
 | Member | Role |
 |---|---|
-| edsole-a | maze generator, including the recursive backtracker logic, solver support, the "42" pattern, and hexadecimal output |
 | dhontani | config parsing, ASCII renderer, user interactions, package structure, Makefile, and README |
+| edsole-a | maze generator, including the recursive backtracker logic, the "42" pattern, and hexadecimal output |
+
 
 ### Planning
 
@@ -231,6 +232,7 @@ AI was used to help draft and rewrite this README, to structure the required sec
 
 - [Maze generation algorithms — Wikipedia](https://en.wikipedia.org/wiki/Maze_generation_algorithm)
 - [Recursive Backtracker explained — Think Labyrinth](http://www.astrolog.org/labyrnth/algrithm.htm)
+- [Depth First Search or DFS for a Graph — GeeksforGeeks](https://www.geeksforgeeks.org/dsa/depth-first-search-or-dfs-for-a-graph/)
 - [BFS and pathfinding — Red Blob Games](https://www.redblobgames.com/pathfinding/a-star/introduction.html)
 - [Python packaging — official guide](https://packaging.python.org/en/latest/tutorials/packaging-projects/)
 - [ANSI escape codes — Wikipedia](https://en.wikipedia.org/wiki/ANSI_escape_code)
