@@ -33,6 +33,11 @@ This installs the dependencies required by the terminal program. To build the re
 cd mazegen
 python -m build
 ```
+If build is not installed:
+
+```bash
+pip install build
+```
 
 ### Running the program
 
