@@ -5,9 +5,20 @@ import time
 
 
 def render_path(coords: list[tuple[int, int]], animate: bool = True) -> None:
+    """Draw the solution path over an already-printed maze using cursor positioning.
+
+    Moves the terminal cursor to each coordinate's screen position and prints
+    a yellow asterisk. Skips the first and last coords (entry/exit), since
+    those are rendered separately with different markers.
+
+    Args:
+        coords: Ordered list of (x, y) maze cell coordinates forming the path.
+        animate: If True, pause briefly between each printed cell to create
+            a drawing animation. If False, print all cells immediately.
+    """
     if animate is True:
         for x, y in coords[1:-1]:
-            fila = y * 2 + 1
+            fila = y * 2 + 2
             columna = x * 3 + 2
             print(f"\033[{fila};{columna}H"
                   f"\033[1;93m*\033[0m",
@@ -15,7 +26,7 @@ def render_path(coords: list[tuple[int, int]], animate: bool = True) -> None:
             time.sleep(0.02)
     else:
         for x, y in coords[1:-1]:
-            fila = y * 2 + 1
+            fila = y * 2 + 2
             columna = x * 3 + 2
             print(f"\033[{fila};{columna}H\033[1;93m*\033[0m",
                   end="", flush=True)
@@ -23,6 +34,20 @@ def render_path(coords: list[tuple[int, int]], animate: bool = True) -> None:
 
 def path_to_coords(path: list[str],
                    entry: tuple[int, int]) -> list[tuple[int, int]]:
+    """Convert a sequence of cardinal-direction moves into absolute coordinates.
+
+    Starts at the entry cell and applies each move ('N', 'S', 'E', 'W') in
+    order, recording the resulting (x, y) position after every step.
+
+    Args:
+        path: Sequence of direction characters ('N', 'S', 'E', 'W') describing
+            the path from entry to exit.
+        entry: Starting (x, y) coordinate of the path.
+
+    Returns:
+        List of (x, y) coordinates, starting with entry, with one additional
+        coordinate per move in path.
+    """
     result = []
     x, y = entry
     result.append((x, y))
